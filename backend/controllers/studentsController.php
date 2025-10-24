@@ -44,16 +44,36 @@ function handlePost($conn)
 {
     $input = json_decode(file_get_contents("php://input"), true);
 
-    $result = createStudent($conn, $input['fullname'], $input['email'], $input['age']);
-    if ($result['inserted'] > 0) 
+    // --- INICIO DE LA MODIFICACIÓN (PASO 2) ---
+
+    // 1. Verificar si el email ya existe usando la función del Paso 1
+    $existingStudent = getStudentByEmail($conn, $input['email']);
+
+    // 2. Comprobar el resultado
+    if ($existingStudent) 
     {
-        echo json_encode(["message" => "Estudiante agregado correctamente"]);
+        // 3a. Si $existingStudent NO es null, el email ya existe.
+        // Devolvemos un error 409 (Conflict) para que el frontend lo sepa.
+        http_response_code(409); 
+        echo json_encode(["error" => "El email ingresado ya está registrado"]);
     } 
     else 
     {
-        http_response_code(500);
-        echo json_encode(["error" => "No se pudo agregar"]);
+        // 3b. Si $existingStudent ES null, el email está libre.
+        // Procedemos a crear el estudiante como antes.
+        $result = createStudent($conn, $input['fullname'], $input['email'], $input['age']);
+        
+        if ($result['inserted'] > 0) 
+        {
+            echo json_encode(["message" => "Estudiante agregado correctamente"]);
+        } 
+        else 
+        {
+            http_response_code(500);
+            echo json_encode(["error" => "No se pudo agregar"]);
+        }
     }
+    // --- FIN DE LA MODIFICACIÓN ---
 }
 
 function handlePut($conn) 
