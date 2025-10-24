@@ -83,4 +83,20 @@ function deleteStudent($conn, $id)
     //Se retorna fila afectadas para validar en controlador
     return ['deleted' => $stmt->affected_rows];
 }
+
+/**
+ * NUEVA FUNCIÓN
+ * Busca un estudiante por su email.
+ * Devuelve los datos del estudiante si lo encuentra, o null si no existe.
+ */
+function getStudentByEmail($conn, $email) 
+{
+    $stmt = $conn->prepare("SELECT * FROM students WHERE email = ?");
+    $stmt->bind_param("s", $email); // "s" porque el email es un string (cadena)
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    // fetch_assoc() devuelve un array asociativo (el estudiante) o null si no hay resultados
+    return $result->fetch_assoc(); 
+}
 ?>

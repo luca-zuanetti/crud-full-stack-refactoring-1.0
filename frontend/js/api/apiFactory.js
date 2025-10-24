@@ -13,7 +13,7 @@ export function createAPI(moduleName, config = {})
     const API_URL = config.urlOverride ?? `../../backend/server.php?module=${moduleName}`;
 
     async function sendJSON(method, data) 
-    {
+        {
         const res = await fetch(API_URL,
         {
             method,
@@ -21,17 +21,37 @@ export function createAPI(moduleName, config = {})
             body: JSON.stringify(data)
         });
 
-        if (!res.ok) throw new Error(`Error en ${method}`);
-        return await res.json();
-    }
+        // --- INICIO DE LA MODIFICACIÓN (PASO 3 CORREGIDO) ---
+        if (!res.ok) 
+        {
+            // Si la respuesta no es OK (ej: 409, 500), 
+            // intentamos leer el cuerpo del error (nuestro JSON del backend)
+            const errorData = await res.json();
+            
+            // Lanzamos un error usando el mensaje específico del backend
+            // Si por alguna razón no hay mensaje, usamos uno genérico
+            throw new Error(errorData.error || `Error en ${method}`);
+        }
+        // --- FIN DE LA MODIFICACIÓN ---
 
+        return await res.json();
+        }
     return {
         async fetchAll()
         {
             const res = await fetch(API_URL);
-            if (!res.ok) throw new Error("No se pudieron obtener los datos");
+
+            // --- INICIO DE LA MODIFICACIÓN (PASO 3 CORREGIDO) ---
+            if (!res.ok) 
+            {
+                // Hacemos lo mismo para fetchAll por consistencia
+                const errorData = await res.json();
+                throw new Error(errorData.error || "No se pudieron obtener los datos");
+            }
+            // --- FIN DE LA MODIFICACIÓN ---
+
             return await res.json();
-        },
+        },        
         //2.0
         async fetchPaginated(page = 1, limit = 10)
         {

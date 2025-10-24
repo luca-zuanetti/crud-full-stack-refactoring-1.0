@@ -48,7 +48,15 @@ function setupFormHandler()
         }
         catch (err)
         {
+            // --- INICIO DE LA MODIFICACIÓN (PASO 4) ---
+
+            // Ahora 'err.message' SÍ contendrá "El email ingresado ya está registrado"
+            // gracias al cambio en apiFactory.js
+            alert('Error al guardar: ' + err.message);
+
             console.error(err.message);
+            
+            // --- FIN DE LA MODIFICACIÓN ---
         }
     });
 }
