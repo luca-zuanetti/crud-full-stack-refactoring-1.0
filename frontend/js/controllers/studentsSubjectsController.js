@@ -80,7 +80,8 @@ function setupFormHandler()
         } 
         catch (err) 
         {
-            console.error('Error guardando relación:', err.message);
+            alert('Error al guardar: ' + err.message);
+            console.error(err.message);
         }
     });
 }

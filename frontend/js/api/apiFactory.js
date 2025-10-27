@@ -40,16 +40,7 @@ export function createAPI(moduleName, config = {})
         async fetchAll()
         {
             const res = await fetch(API_URL);
-
-            // --- INICIO DE LA MODIFICACIÓN (PASO 3 CORREGIDO) ---
-            if (!res.ok) 
-            {
-                // Hacemos lo mismo para fetchAll por consistencia
-                const errorData = await res.json();
-                throw new Error(errorData.error || "No se pudieron obtener los datos");
-            }
-            // --- FIN DE LA MODIFICACIÓN ---
-
+            if (!res.ok) throw new Error("No se pudieron obtener los datos");
             return await res.json();
         },        
         //2.0
