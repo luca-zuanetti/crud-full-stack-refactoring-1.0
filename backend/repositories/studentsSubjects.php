@@ -42,9 +42,8 @@ function getAllSubjectsStudents($conn)
 //Query escrita con ALIAS resumidos:
 function getSubjectsByStudent($conn, $student_id) 
 {
-    $sql = "SELECT ss.subject_id, s.name, ss.approved
+    $sql = "SELECT ss.subject_id
         FROM students_subjects ss
-        JOIN subjects s ON ss.subject_id = s.id
         WHERE ss.student_id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $student_id);

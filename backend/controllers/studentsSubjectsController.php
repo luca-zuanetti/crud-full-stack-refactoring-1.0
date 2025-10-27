@@ -20,12 +20,28 @@ function handleGet($conn)
 function handlePost($conn) 
 {
     $input = json_decode(file_get_contents("php://input"), true);
-    
+
+    $studentSubjects = getSubjectsByStudent($conn, $input['student_id']);
+
+    $i = 0;
+    $subjectsCount = count($studentSubjects);
+
+    while($i < $subjectsCount && $studentSubjects[$i]['subject_id'] != $input['subject_id'])
+        ++$i;
+
+    if ($i < $subjectsCount)
+    {
+        http_response_code(409); 
+        echo json_encode(["error" => "La relación seleccionada ya está registrada"]);
+        return;
+    } 
+
     $result = assignSubjectToStudent($conn, $input['student_id'], $input['subject_id'], $input['approved']);
+
     if ($result['inserted'] > 0) 
     {
         echo json_encode(["message" => "Asignación realizada"]);
-    } 
+    }
     else 
     {
         http_response_code(500);
