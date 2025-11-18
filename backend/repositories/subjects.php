@@ -74,9 +74,21 @@ function deleteSubject($conn, $id)
     $sql = "DELETE FROM subjects WHERE id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $id);
-    $stmt->execute();
-
-    return ['deleted' => $stmt->affected_rows];
+   //MOD 3 detecta error al eliminar
+    try{
+        if ($stmt->execute()) {
+        return ['deleted' => $stmt->affected_rows];
+        } 
+        else {
+            return ['error' => 'Error al eliminar (Problema de ejecución SQL).'];
+        }
+    }  
+    catch (mysqli_sql_exception $e) {
+        if ($e->getCode() == 1451) {
+        return ['error' => 'No se puede borrar la materia, está asignada a uno o más estudiantes.'];
+        }
+        return ['error' => 'Error SQL: ' . $e->getMessage()]; 
+    }
 }
 //MOD 1 (cuanta cantidad de repeticiones del name en la tabla subjects)
 function subjectExists($conn,$name)
