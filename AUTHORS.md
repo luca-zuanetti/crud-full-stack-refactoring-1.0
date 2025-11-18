@@ -15,9 +15,10 @@ This project is an educational prototype of a CRUD (Create Read Update and Delet
 
 ## All other contributors and their affiliations:
 
-* Estudiantes de Tecnologías B - Mar del Plata (Argentina)
-
-    * Many intelligent people.
+* Augusto Loureyro - validación al crear relación estudiante-materia
+* Luca Zuanetti - validación de email al crear estudiante
+* Joaquín Buroni - validación de nombre al crear materia
+* Santiago Gentile - validación al eliminar materia
 
 
 ## Special thanks to
