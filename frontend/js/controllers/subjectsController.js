@@ -179,5 +179,7 @@ async function confirmDeleteSubject(id)
     catch (err)
     {
         console.error('Error al borrar materia:', err.message);
+        //MOD 3 alerta de error
+        alert('Error: ' + err.message);
     }
 }

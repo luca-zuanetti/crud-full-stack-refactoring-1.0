@@ -92,11 +92,17 @@ function handleDelete($conn)
     $input = json_decode(file_get_contents("php://input"), true);
     
     $result = deleteSubject($conn, $input['id']);
-    if ($result['deleted'] > 0) 
+    //MOD 3 envia mensaje
+    if (isset($result['error'])) 
     {
-        echo json_encode(["message" => "Materia eliminada correctamente"]);
+        http_response_code(409); 
+        echo json_encode(["error" => $result['error']]);
     } 
-    else 
+    elseif (isset($result['deleted']) && $result['deleted'] > 0)
+    {
+        echo json_encode(["message" => "Eliminado correctamente"]);
+    }
+    else
     {
         http_response_code(500);
         echo json_encode(["error" => "No se pudo eliminar"]);
