@@ -14,13 +14,15 @@ require_once("./repositories/subjects.php");
 function handleGet($conn) 
 {
     //MOD 2 validar si ya existe la materia
-    if (isset($_GET['action'])
-        && $_GET['action'] === 'exists' 
-        && isset($_GET['name'])) 
+    if (isset($_GET['action']) && $_GET['action'] === 'exists' && isset($_GET['name'])) 
     {
-        require_once("./repositories/subjects.php");
-
         $name = trim($_GET['name']);
+        if ($name === '') {
+            http_response_code(400);
+            echo json_encode(["error" => "Nombre vacío"]);
+            return;
+        }
+        require_once("./repositories/subjects.php");
         $exists = subjectExists($conn, $name); //funcion creada primero 
 
         header("Content-Type: application/json");
