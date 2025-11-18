@@ -38,6 +38,14 @@ function setupSubjectFormHandler()
 
         try 
         {
+            // MOD 4 validación FRONTEND (revisar si existe)
+            if (!subject.id) { // solo al crear
+                const check = await subjectsAPI.exists(subject.name);
+                if (check.exists) {
+                    alert("⚠️ La materia ya existe");
+                    return; // cancelar el submit
+                }
+        }
             if (subject.id) 
             {
                 await subjectsAPI.update(subject);
