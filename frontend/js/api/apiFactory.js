@@ -63,6 +63,14 @@ export function createAPI(moduleName, config = {})
         async remove(id)
         {
             return await sendJSON('DELETE', { id });
+        },
+        //MOD 3 
+        async exists(name)
+        {    
+            const url = `../../backend/server.php?module=subjects&action=exists&name=${encodeURIComponent(name)}`;
+            const res = await fetch(url);
+             if (!res.ok) throw new Error("Error verificando existencia");
+                return await res.json();
         }
     };
 }
