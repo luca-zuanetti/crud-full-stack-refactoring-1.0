@@ -78,4 +78,14 @@ function deleteSubject($conn, $id)
 
     return ['deleted' => $stmt->affected_rows];
 }
+//MOD 1 (cuanta cantidad de repeticiones del name en la tabla subjects)
+function subjectExists($conn,$name)
+    {
+        $stmt= $conn->prepare("SELECT COUNT(*) FROM subjects WHERE name= ?");
+        $stmt->bind_param("s",$name);
+        $stmt->execute();
+        $stmt->bind_result($count);
+        $stmt->fetch();
+        return $count > 0;
+    }
 ?>
